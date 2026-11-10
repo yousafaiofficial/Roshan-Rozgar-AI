@@ -20,7 +20,7 @@ Built specifically for the Islamabad & Rawalpindi twin-cities ecosystem:
 - **Interactive Twin Cities Discovery Map:** Dynamic Leaflet map pinpointing verified technicians across Islamabad and Rawalpindi sectors with real-time availability badges.
 - **AI-Powered Voice Negotiation & Quotation:** Voice messages between customer and worker are automatically transcribed and analyzed to extract agreed service rates and visit charges.
 - **Authentic 5-Category Review Intelligence:** Gemini analyzes customer feedback to score work quality, punctuality, communication, and professionalism with dual-language AI summaries.
-- **Fail-Safe Offline Heuristics:** If Gemini API keys are omitted or external network requests time out, the backend gracefully falls back to instant regex heuristics, guaranteeing zero downtime.
+- **Fail-Safe Offline Heuristic:** If Gemini API keys are omitted or external network requests time out, the backend gracefully falls back to instant regex heuristics, guaranteeing zero downtime.
 
 ---
 
