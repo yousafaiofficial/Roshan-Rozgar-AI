@@ -274,3 +274,6 @@ def uploaded(name:str):
     file=UPLOADS/name
     if not file.exists():raise HTTPException(404)
     return FileResponse(file)
+
+from .ai import ai_router
+app.include_router(ai_router)

@@ -59,6 +59,16 @@ type Worker = {
   experience_years: number;
   pricing_type: "job" | "hour";
   completed_jobs: number;
+  match_score?: number;
+  match_level?: string;
+  score_breakdown?: {
+    skill_score: number;
+    location_score: number;
+    availability_score: number;
+    pricing_score: number;
+    history_score: number;
+  };
+  explanations?: string[];
 };
 type User = {
   id: number;
@@ -130,9 +140,32 @@ export default function Home() {
       professionalism: 5,
       communication: 5,
     }),
-    [reviewJob, setReviewJob] = useState<Job | null>(null);
+    [reviewJob, setReviewJob] = useState<Job | null>(null),
+    [aiQuery, setAiQuery] = useState(""),
+    [aiLoading, setAiLoading] = useState(false),
+    [aiResult, setAiResult] = useState<{
+      status: string;
+      language: string;
+      target_category?: string;
+      target_city?: string;
+      target_neighborhood?: string;
+      target_budget?: number;
+      is_urgent?: boolean;
+      is_confident?: boolean;
+      classification?: {
+        confidence?: number;
+        top_categories?: Array<{ category: string; probability: number }>;
+      };
+      clarification_prompt?: {
+        en: string;
+        ur: string;
+        "ur-Latn": string;
+      };
+    } | null>(null),
+    [aiActive, setAiActive] = useState(false);
   const set = (key: string, value: string) =>
     setForm((v) => ({ ...v, [key]: value }));
+
   const loadWorkers = useCallback(async () => {
     try {
       const q = new URLSearchParams();
@@ -143,6 +176,52 @@ export default function Home() {
       setError(String(e));
     }
   }, [skill, city]);
+
+  const runAiMatch = async (queryText?: string) => {
+    const q = (queryText !== undefined ? queryText : aiQuery).trim();
+    if (!q) return;
+    setAiLoading(true);
+    setError("");
+    try {
+      const res = await call("/api/ai/match", "POST", { query: q });
+      setAiResult(res);
+      setAiActive(true);
+      if (res.workers && res.workers.length > 0) {
+        setWorkers(res.workers);
+      }
+    } catch (e) {
+      setError("AI matching failed: " + (e as Error).message);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const clearAiMatch = () => {
+    setAiActive(false);
+    setAiResult(null);
+    setAiQuery("");
+    void loadWorkers();
+  };
+
+  const listenAiQuery = () => {
+    const w = window as unknown as {
+      SpeechRecognition?: new () => any;
+      webkitSpeechRecognition?: new () => any;
+    };
+    const Recognition = w.SpeechRecognition || w.webkitSpeechRecognition;
+    if (!Recognition) {
+      setError("Speech recognition is not supported in this browser. Try typing instead.");
+      return;
+    }
+    const rec = new Recognition();
+    rec.lang = "ur-PK";
+    rec.onresult = (e: any) => {
+      const transcript = e.results[0][0].transcript;
+      setAiQuery((prev) => (prev ? prev + " " + transcript : transcript).trim());
+    };
+    rec.onerror = () => setError("Microphone could not capture speech.");
+    rec.start();
+  };
   const loadJobs = useCallback(
     async (t?: string) => {
       const key = t || token;
@@ -539,11 +618,167 @@ export default function Home() {
                 Show all
               </button>
             </div>
+
+            {/* AI Assistant Search Bar */}
+            <div className="ai-match-container">
+              <div className="ai-match-header">
+                <div>
+                  <span className="ai-tag">
+                    <Sparkles size={14} /> AI Matching Engine
+                  </span>
+                  <h3 style={{ margin: "8px 0 4px", fontSize: "18px" }}>
+                    Describe your problem in natural language
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "13px", color: "var(--muted)" }}>
+                    English, Roman Urdu, or اردو — our local AI identifies your trade, location, urgency, and ranks top local professionals.
+                  </p>
+                </div>
+                {aiActive && (
+                  <button className="btn secondary small" onClick={clearAiMatch}>
+                    <X size={14} /> Reset AI Match
+                  </button>
+                )}
+              </div>
+
+              <div className="ai-search-row">
+                <div className="ai-input-wrap">
+                  <input
+                    type="text"
+                    value={aiQuery}
+                    onChange={(e) => setAiQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        void runAiMatch();
+                      }
+                    }}
+                    placeholder="e.g. AC cooling nahi kar raha gas refill chahiye F-10 Islamabad budget 2000"
+                    aria-label="Describe your service request"
+                  />
+                  <button
+                    type="button"
+                    className="ai-mic-btn"
+                    onClick={listenAiQuery}
+                    title="Voice input in Urdu or English"
+                    aria-label="Speak service request"
+                  >
+                    <Mic size={18} />
+                  </button>
+                </div>
+                <button
+                  className="btn copper"
+                  disabled={aiLoading || !aiQuery.trim()}
+                  onClick={() => void runAiMatch()}
+                >
+                  <Sparkles size={16} />
+                  {aiLoading ? "Matching..." : "Match Workers"}
+                </button>
+              </div>
+
+              {/* Sample Query Chips */}
+              <div className="ai-query-chips">
+                <span style={{ fontSize: "12px", color: "var(--muted)", alignSelf: "center" }}>
+                  Try asking:
+                </span>
+                {[
+                  "AC thandi hawa nahi de raha F-10 Islamabad",
+                  "Kitchen sink pipe leaking water Rawalpindi",
+                  "Main breaker trip ho raha hai short circuit",
+                  "Almari ka darwaza toot gaya hai carpenter chahiye",
+                  "موٹر سائیکل کی ٹیوننگ اور آئل تبدیل کروانا ہے",
+                ].map((sample) => (
+                  <button
+                    key={sample}
+                    type="button"
+                    className="ai-chip"
+                    onClick={() => {
+                      setAiQuery(sample);
+                      void runAiMatch(sample);
+                    }}
+                  >
+                    {sample}
+                  </button>
+                ))}
+              </div>
+
+              {/* AI Understanding & Classification Analysis */}
+              {aiResult && (
+                <div className="ai-analysis-banner">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <strong style={{ fontSize: "13px", color: "var(--espresso)" }}>
+                      AI Request Understanding:
+                    </strong>
+                    <span style={{ fontSize: "11px", color: "var(--muted)" }}>
+                      Language: {aiResult.language === "ur" ? "اردو" : aiResult.language === "ur-Latn" ? "Roman Urdu" : "English"}
+                    </span>
+                  </div>
+                  <div className="ai-analysis-pills">
+                    {aiResult.target_category && (
+                      <span className="ai-pill category">
+                        <CheckCircle2 size={13} />
+                        Trade: {aiResult.target_category}
+                        {aiResult.classification?.confidence ? ` (${Math.round(aiResult.classification.confidence * 100)}% confidence)` : ""}
+                      </span>
+                    )}
+                    {(aiResult.target_city || aiResult.target_neighborhood) && (
+                      <span className="ai-pill">
+                        <MapPin size={13} />
+                        {aiResult.target_neighborhood ? `${aiResult.target_neighborhood}, ` : ""}
+                        {aiResult.target_city || "Twin Cities"}
+                      </span>
+                    )}
+                    {aiResult.target_budget && (
+                      <span className="ai-pill">
+                        Budget: Rs. {aiResult.target_budget.toLocaleString()}
+                      </span>
+                    )}
+                    {aiResult.is_urgent && (
+                      <span className="ai-pill" style={{ color: "#c46b45", borderColor: "#f7ceba" }}>
+                        ⚡ High Urgency
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Fallback & Clarification prompt if ambiguous */}
+                  {aiResult.clarification_prompt && !aiResult.is_confident && (
+                    <div className="ai-fallback-guidance">
+                      <p style={{ margin: "0 0 6px", fontWeight: 600 }}>
+                        {urdu ? aiResult.clarification_prompt.ur : aiResult.clarification_prompt.en}
+                      </p>
+                      {aiResult.classification?.top_categories && aiResult.classification.top_categories.length > 0 && (
+                        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "6px" }}>
+                          {aiResult.classification.top_categories.map((c: any) => (
+                            <button
+                              key={c.category}
+                              type="button"
+                              className="btn secondary small"
+                              style={{ padding: "4px 10px", fontSize: "11px" }}
+                              onClick={() => {
+                                setSkill(c.category);
+                                void loadWorkers();
+                              }}
+                            >
+                              Select {c.category} ({Math.round(c.probability * 100)}%)
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
             {workers.length ? (
               <div className="workergrid">
                 {workers.map((w) => (
                   <article className="workercard" key={w.id}>
                     <div className="workercover">
+                      {w.match_score !== undefined && (
+                        <span className={`ai-score-badge ${w.match_level || "strong"}`}>
+                          <Sparkles size={11} /> {Math.round(w.match_score)}% Match
+                        </span>
+                      )}
                       {w.photo ? <img className="workerphoto" src={w.photo.startsWith('/api/') ? API+w.photo : w.photo} alt={`${w.name}, ${w.skill} in ${w.city}`} /> : <div className="avatar" aria-label="No profile photo"><UserRound size={42} strokeWidth={1.5} /></div>}
                       <span
                         className={"available " + (!w.available ? "busy" : "")}
@@ -567,6 +802,16 @@ export default function Home() {
                         )}
                       </div>
                       <p>{w.bio || "Skilled local professional."}</p>
+                      {w.explanations && w.explanations.length > 0 && (
+                        <div className="ai-explanations">
+                          {w.explanations.slice(0, 3).map((exp, idx) => (
+                            <div key={idx} className="ai-explanation-item">
+                              <CheckCircle2 size={12} color="var(--copper)" style={{ flexShrink: 0, marginTop: 2 }} />
+                              <span>{exp}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                       <div className="skillchips">{w.extra_skills.slice(0,2).map(item=><span key={item}>{item}</span>)}</div>
                       <div className="workerfoot">
                         <div>
