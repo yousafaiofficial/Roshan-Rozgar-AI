@@ -52,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isUrdu = lang === 'ur';
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FFF9EC]/90 backdrop-blur-md border-b border-[#F2DDD3] transition-all">
+    <header className="sticky top-0 z-40 bg-[#5D2A42] backdrop-blur-md border-b border-[#431D30] transition-all">
 
 
       {/* Main Navbar */}
@@ -64,19 +64,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="text-left group flex items-center gap-3 cursor-pointer"
           >
             {/* Custom Logo Emblem */}
-            <div className="w-10 h-10 rounded-xl bg-[#5D2A42] text-[#FB6376] flex items-center justify-center font-extrabold shadow-sm group-hover:scale-105 transition-transform border border-[#FB6376]/40">
+            <div className="w-10 h-10 rounded-xl bg-[#FB6376] text-white flex items-center justify-center font-extrabold shadow-sm group-hover:scale-105 transition-transform border border-[#FCB1A6]/40">
               <span className="text-xl">ر</span>
             </div>
             <div>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-extrabold tracking-tight text-[#5D2A42] group-hover:text-[#FB6376] transition-colors">
+                <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-[#FCB1A6] transition-colors">
                   Roshan Rozgar
                 </span>
-                <span className="text-base font-urdu font-bold text-[#FB6376]">
+                <span className="text-base font-urdu font-bold text-[#FCB1A6]">
                   روشن روزگار
                 </span>
               </div>
-              <div className="text-[10px] text-[#886273] font-medium tracking-wide hidden sm:block">
+              <div className="text-[10px] text-[#FCB1A6]/80 font-medium tracking-wide hidden sm:block">
                 Kaam Aasaan, Rozgar Roshan
               </div>
             </div>
@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Center Navigation Links (Linear/Stripe style) */}
-        <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold text-[#3A1B29]">
+        <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold text-white">
           <button
             onClick={() => {
               setUserRole('customer');
@@ -92,8 +92,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             className={`transition-colors whitespace-nowrap cursor-pointer py-1 ${
               currentTab === 'discovery'
-                ? 'text-[#5D2A42] border-b-2 border-[#FB6376]'
-                : 'text-[#886273] hover:text-[#FB6376]'
+                ? 'text-white border-b-2 border-[#FCB1A6]'
+                : 'text-[#FCB1A6] hover:text-white'
             }`}
           >
             {t(lang, 'findWorkers')}
@@ -103,8 +103,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setCurrentTab('how-it-works')}
             className={`transition-colors whitespace-nowrap cursor-pointer py-1 ${
               currentTab === 'how-it-works'
-                ? 'text-[#5D2A42] border-b-2 border-[#FB6376]'
-                : 'text-[#886273] hover:text-[#FB6376]'
+                ? 'text-white border-b-2 border-[#FCB1A6]'
+                : 'text-[#FCB1A6] hover:text-white'
             }`}
           >
             {t(lang, 'howItWorks')}
@@ -117,8 +117,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             className={`flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer py-1 ${
               currentTab === 'voice-onboard'
-                ? 'text-[#5D2A42] border-b-2 border-[#FB6376]'
-                : 'text-[#886273] hover:text-[#FB6376]'
+                ? 'text-white border-b-2 border-[#FCB1A6]'
+                : 'text-[#FCB1A6] hover:text-white'
             }`}
           >
             <Mic className="w-3.5 h-3.5 text-[#FB6376]" />
@@ -132,8 +132,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             className={`transition-colors whitespace-nowrap cursor-pointer py-1 ${
               currentTab === 'customer-dashboard'
-                ? 'text-[#5D2A42] border-b-2 border-[#FB6376]'
-                : 'text-[#886273] hover:text-[#FB6376]'
+                ? 'text-white border-b-2 border-[#FCB1A6]'
+                : 'text-[#FCB1A6] hover:text-white'
             }`}
           >
             Customer Hub
@@ -146,8 +146,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             }}
             className={`flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer py-1 ${
               currentTab === 'worker-dashboard'
-                ? 'text-[#5D2A42] border-b-2 border-[#FB6376]'
-                : 'text-[#886273] hover:text-[#FB6376]'
+                ? 'text-white border-b-2 border-[#FCB1A6]'
+                : 'text-[#FCB1A6] hover:text-white'
             }`}
           >
             <UserCheck className="w-3.5 h-3.5 text-[#FB6376]" />
@@ -158,8 +158,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setCurrentTab('architecture')}
             className={`flex items-center gap-1 transition-colors whitespace-nowrap cursor-pointer py-1 ${
               currentTab === 'architecture'
-                ? 'text-[#5D2A42] border-b-2 border-[#FB6376]'
-                : 'text-[#886273] hover:text-[#FB6376]'
+                ? 'text-white border-b-2 border-[#FCB1A6]'
+                : 'text-[#FCB1A6] hover:text-white'
             }`}
           >
             <Shield className="w-3.5 h-3.5 text-[#886273]" />
@@ -173,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onResetDemo}
             disabled={isResetting}
-            className="hidden sm:flex items-center justify-center p-2 rounded-xl text-[#886273] hover:text-[#5D2A42] hover:bg-[#FFDCCC]/60 transition-colors cursor-pointer"
+            className="hidden sm:flex items-center justify-center p-2 rounded-xl text-[#886273] hover:text-white hover:bg-[#431D30] transition-colors cursor-pointer"
             title="Reset Demo Data"
             aria-label="Reset Demo Data"
           >
@@ -181,13 +181,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           {/* Language Selector */}
-          <div className="flex items-center p-0.5 bg-[#FFDCCC]/60 border border-[#F2DDD3] rounded-xl text-xs font-semibold">
+          <div className="flex items-center p-0.5 bg-[#431D30] border border-[#5D2A42] rounded-xl text-xs font-semibold">
             <button
               onClick={() => setLang('en')}
               className={`px-2 py-1 rounded-lg transition-colors cursor-pointer ${
                 lang === 'en'
-                  ? 'bg-white text-[#5D2A42] shadow-xs'
-                  : 'text-[#886273] hover:text-[#3A1B29]'
+                  ? 'bg-[#FB6376] text-white shadow-xs'
+                  : 'text-[#FCB1A6] hover:text-white'
               }`}
             >
               EN
@@ -196,8 +196,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => setLang('roman')}
               className={`px-2 py-1 rounded-lg transition-colors cursor-pointer ${
                 lang === 'roman'
-                  ? 'bg-white text-[#5D2A42] shadow-xs'
-                  : 'text-[#886273] hover:text-[#3A1B29]'
+                  ? 'bg-[#FB6376] text-white shadow-xs'
+                  : 'text-[#FCB1A6] hover:text-white'
               }`}
             >
               Roman
@@ -207,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-2 py-1 rounded-lg transition-colors font-urdu cursor-pointer ${
                 lang === 'ur'
                   ? 'bg-white text-[#5D2A42] shadow-xs font-bold'
-                  : 'text-[#886273] hover:text-[#3A1B29]'
+                  : 'text-[#FCB1A6] hover:text-white'
               }`}
             >
               اردو
@@ -215,7 +215,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Role Mode Pills */}
-          <div className="hidden sm:flex items-center p-0.5 bg-[#FFDCCC]/60 border border-[#F2DDD3] rounded-xl text-xs font-semibold">
+          <div className="hidden sm:flex items-center p-0.5 bg-[#431D30] border border-[#5D2A42] rounded-xl text-xs font-semibold">
             <button
               onClick={() => {
                 setUserRole('customer');
@@ -251,10 +251,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() =>
                   setCurrentTab(userRole === 'worker' ? 'worker-dashboard' : 'customer-dashboard')
                 }
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FFDCCC]/60 border border-[#FB6376]/30 hover:bg-[#FFDCCC] text-[#5D2A42] transition-colors cursor-pointer"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#431D30] border border-[#FB6376]/30 hover:bg-[#5D2A42] text-white transition-colors cursor-pointer"
                 title={userRole === 'worker' ? 'Open Worker Business Console' : 'Open Customer Hub'}
               >
-                <div className="w-6 h-6 rounded-lg bg-[#5D2A42] text-[#FB6376] flex items-center justify-center text-xs font-extrabold overflow-hidden">
+                <div className="w-6 h-6 rounded-lg bg-[#FB6376] text-white flex items-center justify-center text-xs font-extrabold overflow-hidden">
                   {userRole === 'worker' && activeWorker?.avatar_url ? (
                     <img src={activeWorker.avatar_url} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -266,17 +266,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   )}
                 </div>
                 <div className="text-left text-xs leading-tight">
-                  <div className="font-bold text-[#5D2A42] truncate max-w-[100px]">
+                  <div className="font-bold text-white truncate max-w-[100px]">
                     {userRole === 'worker' ? activeWorker?.name : currentUser?.name}
                   </div>
-                  <div className="text-[10px] text-[#FB6376] font-semibold">
+                  <div className="text-[10px] text-[#FCB1A6] font-semibold">
                     {userRole === 'worker' ? 'Worker' : 'Customer'}
                   </div>
                 </div>
               </button>
               <button
                 onClick={onLogout}
-                className="p-2 text-xs font-semibold text-[#886273] hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
+                className="p-2 text-xs font-semibold text-[#FCB1A6] hover:text-white rounded-xl hover:bg-[#431D30] transition-colors cursor-pointer"
                 title="Log Out"
                 aria-label="Log Out"
               >
@@ -287,7 +287,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="hidden md:flex items-center gap-2">
               <button
                 onClick={() => onOpenAuth('login')}
-                className="px-3 py-1.5 text-xs font-bold text-[#5D2A42] hover:text-[#FB6376] transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs font-bold bg-[#431D30] hover:bg-[#5D2A42] text-white rounded-xl shadow-xs transition-transform active:scale-95 cursor-pointer border border-[#FB6376]/40"
               >
                 {t(lang, 'login')}
               </button>
@@ -303,7 +303,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl text-[#5D2A42] hover:bg-[#FFDCCC]/60 transition-colors cursor-pointer"
+            className="lg:hidden p-2 rounded-xl text-white hover:bg-[#431D30] transition-colors cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -313,8 +313,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#FFF9EC] border-b border-[#F2DDD3] px-4 py-4 space-y-3 animate-in slide-in-from-top-2">
-          <div className="grid grid-cols-2 gap-2 pb-3 border-b border-[#F2DDD3]">
+        <div className="lg:hidden bg-[#5D2A42] border-b border-[#431D30] px-4 py-4 space-y-3 animate-in slide-in-from-top-2">
+          <div className="grid grid-cols-2 gap-2 pb-3 border-b border-[#431D30]">
             <button
               onClick={() => {
                 setUserRole('customer');
@@ -323,8 +323,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className={`py-2 text-xs font-bold rounded-xl text-center ${
                 userRole === 'customer'
-                  ? 'bg-[#5D2A42] text-white'
-                  : 'bg-[#FFDCCC] text-[#5D2A42]'
+                  ? 'bg-[#FB6376] text-white'
+                  : 'bg-[#431D30] text-[#FCB1A6]'
               }`}
             >
               Customer Mode
@@ -337,21 +337,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className={`py-2 text-xs font-bold rounded-xl text-center ${
                 userRole === 'worker'
-                  ? 'bg-[#5D2A42] text-white'
-                  : 'bg-[#FFDCCC] text-[#5D2A42]'
+                  ? 'bg-[#FB6376] text-white'
+                  : 'bg-[#431D30] text-[#FCB1A6]'
               }`}
             >
               Worker Mode
             </button>
           </div>
 
-          <div className="flex flex-col gap-2 text-xs font-bold text-[#3A1B29]">
+          <div className="flex flex-col gap-2 text-xs font-bold text-white">
             <button
               onClick={() => {
                 setCurrentTab('landing');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 px-3 rounded-lg hover:bg-[#FFDCCC]/50"
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#431D30]"
             >
               Home (Landing)
             </button>
@@ -360,7 +360,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setCurrentTab('discovery');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 px-3 rounded-lg hover:bg-[#FFDCCC]/50"
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#431D30]"
             >
               {t(lang, 'findWorkers')}
             </button>
@@ -369,7 +369,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setCurrentTab('how-it-works');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 px-3 rounded-lg hover:bg-[#FFDCCC]/50"
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#431D30]"
             >
               {t(lang, 'howItWorks')}
             </button>
@@ -378,7 +378,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setCurrentTab('voice-onboard');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 px-3 rounded-lg hover:bg-[#FFDCCC]/50 text-[#FB6376]"
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#431D30] text-[#FCB1A6]"
             >
               {t(lang, 'becomeWorker')} (Voice Onboard)
             </button>
@@ -387,7 +387,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setCurrentTab('customer-dashboard');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 px-3 rounded-lg hover:bg-[#FFDCCC]/50"
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#431D30]"
             >
               Customer Hub
             </button>
@@ -396,7 +396,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setCurrentTab('worker-dashboard');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 px-3 rounded-lg hover:bg-[#FFDCCC]/50"
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#431D30]"
             >
               Worker Business Console
             </button>
@@ -405,13 +405,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setCurrentTab('architecture');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 px-3 rounded-lg hover:bg-[#FFDCCC]/50"
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#431D30]"
             >
               PRD &amp; Testing Matrix
             </button>
           </div>
 
-          <div className="pt-3 border-t border-[#F2DDD3]">
+          <div className="pt-3 border-t border-[#431D30]">
             {isLoggedIn ? (
               <div className="flex items-center justify-between gap-2">
                 <button
@@ -419,7 +419,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setMobileMenuOpen(false);
                     setCurrentTab(userRole === 'worker' ? 'worker-dashboard' : 'customer-dashboard');
                   }}
-                  className="flex-1 py-2 text-xs font-bold text-[#5D2A42] bg-[#FFDCCC] rounded-xl text-center"
+                  className="flex-1 py-2 text-xs font-bold text-white bg-[#431D30] border border-[#FB6376]/40 rounded-xl text-center"
                 >
                   My Dashboard ({userRole === 'worker' ? activeWorker?.name : currentUser?.name})
                 </button>
@@ -428,7 +428,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setMobileMenuOpen(false);
                     onLogout();
                   }}
-                  className="py-2 px-3 text-xs font-bold text-rose-600 bg-rose-50 rounded-xl"
+                  className="py-2 px-3 text-xs font-bold text-[#FCB1A6] bg-[#431D30] border border-[#FB6376]/40 rounded-xl"
                 >
                   Logout
                 </button>
@@ -440,7 +440,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setMobileMenuOpen(false);
                     onOpenAuth('login');
                   }}
-                  className="flex-1 py-2 text-xs font-bold text-[#5D2A42] bg-[#FFDCCC] rounded-xl text-center"
+                  className="flex-1 py-2 text-xs font-bold text-white bg-[#431D30] border border-[#FB6376]/40 rounded-xl text-center"
                 >
                   Log In
                 </button>

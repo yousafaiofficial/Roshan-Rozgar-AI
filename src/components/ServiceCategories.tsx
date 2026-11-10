@@ -49,19 +49,19 @@ export const ServiceCategories: React.FC<ServiceCategoriesProps> = ({
   const categoriesToDisplay = TRADES.filter((t) => t.id !== 'All');
 
   return (
-    <section className="py-16 bg-[#FFF9EC] border-b border-[#F2DDD3]">
+    <section className="py-16 bg-[#5D2A42] border-b border-[#431D30]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <span className="text-xs font-bold text-[#FB6376] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#FCB1A6] uppercase tracking-wider">
               {lang === 'ur' ? 'ماہر خدمات' : 'Verified Trade Services'}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#5D2A42] tracking-tight mt-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">
               {lang === 'ur' ? 'گھریلو خدمات کے تمام شعبہ جات' : 'Skilled Trades for Every Household Need'}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-[#886273] max-w-md">
+          <p className="text-xs sm:text-sm text-[#FCB1A6] max-w-md">
             Directly connect with certified independent tradespeople in your Islamabad or Rawalpindi sector.
           </p>
         </div>

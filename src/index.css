@@ -39,6 +39,11 @@
   color: #3A1B29;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 [dir="rtl"] {
   direction: rtl;
   text-align: right;
