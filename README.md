@@ -1,4 +1,4 @@
-# Roshan Rozgar AI — Hackathon MVP
+# Roshan Rozgar AI — Local Services Marketplace
 
 A responsive local skilled-worker marketplace for Islamabad and Rawalpindi. The interface uses warm cream, espresso brown and copper accents; no purple or neon visuals. The app has a Next.js frontend and a FastAPI + SQLite backend.
 
@@ -13,7 +13,7 @@ Create local configuration files once (they are ignored by Git):
 Copy-Item backend\.env.example backend\.env
 Copy-Item frontend\.env.example frontend\.env.local
 ```
-Replace `ROSHAN_SECRET` in `backend\.env` with a long random local value. The backend loads this file automatically.
+The backend loads `backend\.env` automatically. Password recovery requires a configured Twilio account; leave the Twilio fields blank to keep recovery disabled. The API reports that configuration is missing rather than pretending to send a message.
 
 **Terminal 1 — API**
 ```powershell
@@ -32,25 +32,13 @@ npm run dev
 ```
 Website: http://localhost:3000
 
-### Demonstration flow
-1. Register a **customer** using a test phone number and password of 8+ characters.
+### Marketplace flow
+1. Register customer and worker accounts using Pakistani mobile numbers and passwords of at least 12 characters.
 2. Select a worker, send a request with a problem description, budget, optional photo and preferred time.
-3. Log out and log in as the seeded worker `03000000001` / `Demo12345!` (electrician) or the corresponding worker number shown below.
+3. Log in using the worker account and review incoming requests.
 4. Open **My Jobs**, accept the request and agree on a price. The backend atomically marks the worker unavailable and declines other pending requests.
 5. Mark the job completed, log back in as customer, open **My Jobs**, submit category ratings.
-6. Filter by service and city. If no matches, save a **demo waitlist** request (no SMS is sent).
-
-### Seeded accounts
-These are fictional demonstration accounts, **not real people**. All have password `Demo12345!`.
-
-| Phone | Trade | City |
-|---|---|---|
-| 03000000001 | Electrician | Islamabad |
-| 03000000002 | Plumber | Rawalpindi |
-| 03000000003 | AC Technician | Islamabad |
-| 03000000004 | Carpenter | Rawalpindi |
-| 03000000005 | Painter | Islamabad |
-| 03000000006 | Cleaner | Rawalpindi |
+6. Filter by service and city. If no matches, save an availability request (no SMS is sent).
 
 ## Features implemented
 - Responsive Next.js homepage, service cards with consistent Lucide icons, and a locally bundled AI-generated electrician hero image.
@@ -58,25 +46,29 @@ These are fictional demonstration accounts, **not real people**. All have passwo
 - Dedicated worker profile pages with neighborhood, experience, pricing type, completed-job count, category review averages and service-request form.
 - Authenticated worker profile-photo upload with file-type signatures, 5 MB limit, persistent local storage and neutral fallback portraits.
 - Three seeded example profiles use clearly fictional AI-generated portraits; remaining profiles use the neutral fallback until a worker uploads a photo.
-- Customer and worker registration/login, 7-day signed demo tokens, PBKDF2 password hashes.
-- Optional CNIC field stored in local demo database and never exposed by public APIs. **Use fake CNIC data only**.
+- Customer and worker registration/login with PBKDF2 password hashes, seven-day server-side sessions, HttpOnly/SameSite cookies, CSRF checks, logout revocation and account-wide session revocation.
+- Pakistani phone validation and E.164 normalization; optional CNIC format validation. CNIC values are not stored or verified, and are never returned by APIs.
+- Password recovery with one-use, 8-digit codes that expire after 15 minutes and a configured Twilio SMS integration.
+- Per-IP/per-phone login limits and registration/recovery throttles.
 - Main skill and additional skills for worker signup.
 - Job request, optional problem photo upload (5 MB), price agreement, accept/decline, completion and review ratings for safety, quality, punctuality, professionalism and communication.
 - SQLite transaction ensures only one accepted job per worker at a time (simplified availability model).
 - Urdu-language voice input for job descriptions and worker bio via browser Web Speech API where supported. Roman Urdu headline toggle is limited; not full translation.
-- Five-step voice-first worker onboarding with Urdu/Roman-Urdu guidance, spoken name and bio capture, large service/city controls, on-screen phone/PIN keypad, audio review and a complete manual fallback.
+- Five-step voice-first worker onboarding with Urdu/Roman-Urdu guidance, spoken name and bio capture, large service/city controls, private password entry, audio review and a complete manual fallback.
 - Demo waitlist storage.
 
 ## Limitations — do not present as finished
-- **Not production-ready.** Local SQLite, local uploads, no HTTPS deployment or multi-instance coordination. Secret must be set in environment; default is development-only.
+- **Not production-ready.** Local SQLite and uploads are single-instance only. Configure HTTPS and set `APP_ENV=production` so session cookies use the Secure attribute before deployment.
+- Login tokens from earlier app versions are not migrated; existing users must sign in again after upgrading.
 - **No actual AI model/API is integrated.** Browser speech recognition is provided by browser/vendor services and may be unavailable or inaccurate for Urdu; no guarantee of offline operation. This is an accessibility experiment, not a trained proprietary AI model.
 - **Browser support:** Chromium-family browsers may expose `SpeechRecognition`/`webkitSpeechRecognition` and speech synthesis, but availability varies by browser build, operating system, device language, network service and microphone permission. Firefox, Safari and embedded/in-app browsers may not expose Urdu recognition. The app detects support at runtime and retains large manual controls when voice is unavailable.
-- Voice onboarding still requires button/keypad interaction for private phone and PIN entry; there is no voice price negotiation, two-way messaging, GPS proximity matching, geocoding, push/SMS notifications, guardian/minor workflow or mandatory worker profile-photo enforcement.
-- No identity verification, CNIC validation, government integration, background checks, payment processing, or arrival-time guarantee. Profiles are fictional and **not verified**.
+- Voice onboarding still requires button interaction for phone/password entry; there is no voice price negotiation, two-way messaging, GPS proximity matching, geocoding, push notifications, guardian/minor workflow or mandatory worker profile-photo enforcement.
+- No identity verification, CNIC government verification, background checks, payment processing, or arrival-time guarantee. Profiles are fictional and **not verified**.
 - Availability is a single busy/free flag per worker, **not time-slot scheduling**. A worker cannot accept a second booking until the accepted job is completed. Both parties can mark a job complete (simplified demo).
-- Registration currently allows an optional CNIC; **never enter real CNIC data in this demo**. Sensitive-data encryption and privacy policy are not implemented.
-- Auth token is stored in localStorage; use secure HttpOnly cookies and CSRF controls before real deployment.
-- No spam protection, account recovery, OTP verification, rate limiting, moderation, photo malware scanning or hardened image validation. Local uploaded images are publicly retrievable by unguessable filename.
+- CNIC is only checked for format; it is not verified, retained or needed for signup. Existing database records are not automatically deleted.
+- Password-recovery SMS will not be sent until valid Twilio credentials and a Pakistan-capable sender are configured. Configure `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_FROM_NUMBER` in the ignored backend `.env` file.
+- Current interface language coverage is incomplete; full English, Roman Urdu and Urdu localization remains in progress.
+- Login, registration and recovery attempts are rate limited, but broader spam controls, moderation, photo malware scanning and hardened image storage are not implemented. Local uploaded images are publicly retrievable by unguessable filename.
 - The electrician hero is AI-generated marketing imagery and does not represent a real, listed or verified worker. Worker cards use a neutral trade icon rather than invented profile photographs or letter avatars.
 - The waitlist **does not send notifications**.
 
@@ -84,7 +76,7 @@ These are fictional demonstration accounts, **not real people**. All have passwo
 ```
 frontend/    Next.js 16 App Router, React 19, TypeScript, CSS, Lucide icons
 backend/     FastAPI, SQLite, local uploads, auth and booking APIs
-docs/        Architecture and hackathon notes
+docs/        Architecture and project status
 ```
 
 ## AI services and coding assistance disclosure

@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import VoiceWorkerOnboarding from "./VoiceWorkerOnboarding";
 import Link from "next/link";
+import { apiCall, apiFetch } from "./api";
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const categories = [
   { name: "Electrician", icon: Zap },
@@ -79,27 +80,24 @@ type Job = {
   agreed_price: number | null;
   photo: string | null;
 };
-type Modal = "login" | "register" | "request" | "notify" | "review" | null;
-async function call(
-  path: string,
-  method = "GET",
-  body?: unknown,
-  token?: string,
-) {
-  const r = await fetch(API + path, {
-    method,
-    headers: {
-      ...(body ? { "Content-Type": "application/json" } : {}),
-      ...(token ? { Authorization: "Bearer " + token } : {}),
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = await r.json().catch(() => ({ detail: "Request failed" }));
-  if (!r.ok)
-    throw Error(
-      typeof data.detail === "string" ? data.detail : "Request failed",
-    );
-  return data;
+type Modal =
+  | "login"
+  | "register"
+  | "forgot"
+  | "reset"
+  | "request"
+  | "notify"
+  | "review"
+  | null;
+function formatCnic(value: string) {
+  const digits = value.replace(/-/g, "");
+  if (!/^[0-9]*$/.test(digits) || digits.length > 13) {
+    throw Error("CNIC must contain exactly 13 digits.");
+  }
+  if (digits.length <= 5) return digits;
+  if (digits.length <= 12)
+    return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+  return `${digits.slice(0, 5)}-${digits.slice(5, 12)}-${digits.slice(12)}`;
 }
 function speak(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
@@ -114,7 +112,6 @@ export default function Home() {
     [modal, setModal] = useState<Modal>(null),
     [selected, setSelected] = useState<Worker | null>(null),
     [user, setUser] = useState<User | null>(null),
-    [token, setToken] = useState(""),
     [jobs, setJobs] = useState<Job[]>([]),
     [showJobs, setShowJobs] = useState(false),
     [error, setError] = useState(""),
@@ -138,36 +135,29 @@ export default function Home() {
       const q = new URLSearchParams();
       if (skill) q.set("skill", skill);
       if (city) q.set("city", city);
-      setWorkers(await call("/api/workers?" + q.toString()));
+      setWorkers(await apiCall("/api/workers?" + q.toString()));
     } catch (e) {
       setError(String(e));
     }
   }, [skill, city]);
-  const loadJobs = useCallback(
-    async (t?: string) => {
-      const key = t || token;
-      if (!key) return;
-      try {
-        setJobs(await call("/api/jobs", "GET", undefined, key));
-      } catch (e) {
-        setError((e as Error).message);
-      }
-    },
-    [token],
-  );
+  const loadJobs = useCallback(async () => {
+    try {
+      setJobs(await apiCall("/api/jobs"));
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, []);
   useEffect(() => {
     void loadWorkers();
   }, [loadWorkers]);
   useEffect(() => {
-    const t = localStorage.getItem("roshan_token");
-    if (t) {
-      call("/api/me", "GET", undefined, t)
-        .then((u: User) => {
-          setUser(u);
-          setToken(t);
-        })
-        .catch(() => localStorage.removeItem("roshan_token"));
-    }
+    void apiFetch("/api/me")
+      .then(async (response) => {
+        if (response.ok) setUser((await response.json()) as User);
+        else if (response.status !== 401)
+          setError("Your account could not be loaded.");
+      })
+      .catch(() => setError("Your account could not be loaded."));
   }, []);
   const open = (m: Modal, w?: Worker) => {
     setModal(m);
@@ -184,9 +174,17 @@ export default function Home() {
     try {
       if (modal === "login" || modal === "register") {
         const isRegister = modal === "register";
+        if (
+          isRegister &&
+          form.cnic &&
+          !/^(?:[0-9]{13}|[0-9]{5}-[0-9]{7}-[0-9])$/.test(form.cnic)
+        ) {
+          throw Error("CNIC must contain exactly 13 digits (XXXXX-XXXXXXX-X).");
+        }
         const data = isRegister
           ? {
               ...form,
+              ...(form.cnic ? { cnic: form.cnic } : {}),
               rate: Number(form.rate || 1000),
               extra_skills: (form.extra_skills || "")
                 .split(",")
@@ -194,16 +192,29 @@ export default function Home() {
                 .filter(Boolean),
             }
           : { phone: form.phone, password: form.password };
-        const result = await call(
+        const result = await apiCall(
           "/api/auth/" + (isRegister ? "register" : "login"),
           "POST",
           data,
         );
-        setToken(result.token);
         setUser(result.user);
-        localStorage.setItem("roshan_token", result.token);
         setModal(null);
-        void loadJobs(result.token);
+        void loadJobs();
+      } else if (modal === "forgot") {
+        await apiCall("/api/auth/forgot-password", "POST", {
+          phone: form.phone,
+        });
+        setModal("reset");
+        setSuccess("If an account matches, a recovery code has been sent.");
+      } else if (modal === "reset") {
+        await apiCall("/api/auth/reset-password", "POST", {
+          phone: form.phone,
+          token: form.reset_token,
+          password: form.new_password,
+        });
+        setForm({ phone: form.phone });
+        setModal("login");
+        setSuccess("Password updated. Log in with your new password.");
       } else if (modal === "request") {
         if (!selected) throw Error("Select a worker");
         let photo;
@@ -213,16 +224,10 @@ export default function Home() {
         if (input?.files?.[0]) {
           const fd = new FormData();
           fd.append("file", input.files[0]);
-          const resp = await fetch(API + "/api/uploads", {
-            method: "POST",
-            headers: { Authorization: "Bearer " + token },
-            body: fd,
-          });
-          const d = await resp.json();
-          if (!resp.ok) throw Error(d.detail || "Upload failed");
+          const d = await apiCall("/api/uploads", "POST", fd);
           photo = d.url;
         }
-        await call(
+        await apiCall(
           "/api/jobs",
           "POST",
           {
@@ -232,24 +237,22 @@ export default function Home() {
             scheduled_at: form.scheduled_at,
             photo,
           },
-          token,
         );
         setModal(null);
         setSuccess("Request sent. Worker can accept it from My Jobs.");
         setShowJobs(true);
         void loadJobs();
       } else if (modal === "notify") {
-        await call("/api/notify", "POST", form);
+        await apiCall("/api/notify", "POST", form);
         setSuccess(
           "Availability request saved. SMS notifications are not currently connected.",
         );
         setModal(null);
       } else if (modal === "review" && reviewJob) {
-        await call(
+        await apiCall(
           "/api/jobs/" + reviewJob.id + "/review",
           "POST",
           { ...ratings, comment: form.comment || "" },
-          token,
         );
         setModal(null);
         setSuccess("Review submitted. Thank you!");
@@ -268,11 +271,10 @@ export default function Home() {
   ) => {
     setError("");
     try {
-      await call(
+      await apiCall(
         "/api/jobs/" + id + "/" + type,
         "POST",
         type === "accept" ? { agreed_price: price } : undefined,
-        token,
       );
       void loadJobs();
       void loadWorkers();
@@ -351,11 +353,16 @@ export default function Home() {
                 <button
                   className="btn secondary small"
                   aria-label="Log out"
-                  onClick={() => {
-                    localStorage.removeItem("roshan_token");
-                    setToken("");
-                    setUser(null);
-                    setShowJobs(false);
+                  onClick={async () => {
+                   try {
+                     await apiCall("/api/auth/logout", "POST");
+                     setUser(null);
+                     setShowJobs(false);
+                     setJobs([]);
+                     setSuccess("You have been logged out.");
+                   } catch (logoutError) {
+                     setError((logoutError as Error).message);
+                   }
                   }}
                 >
                   <LogOut size={16} />
@@ -818,6 +825,10 @@ export default function Home() {
                     ? "Welcome back"
                     : modal === "register"
                       ? "Create your account"
+                      : modal === "forgot"
+                        ? "Recover your account"
+                        : modal === "reset"
+                          ? "Set a new password"
                       : modal === "request"
                         ? "Request " + selected?.skill
                         : modal === "notify"
@@ -866,13 +877,17 @@ export default function Home() {
               </p>
             )}
             <form onSubmit={submit}>
-              {(modal === "login" || modal === "register") && (
+              {(modal === "login" ||
+                modal === "register" ||
+                modal === "forgot" ||
+                modal === "reset") && (
                 <div className="formgrid">
                   {modal === "register" && (
                     <>
                       <div className="formgroup full">
-                        <label>Account type</label>
+                        <label htmlFor="auth-role">Account type</label>
                         <select
+                          id="auth-role"
                           required
                           value={form.role || ""}
                           onChange={(e) => set("role", e.target.value)}
@@ -887,8 +902,9 @@ export default function Home() {
                         </select>
                       </div>
                       <div className="formgroup full">
-                        <label>Full name</label>
+                        <label htmlFor="auth-name">Full name</label>
                         <input
+                          id="auth-name"
                           required
                           value={form.name || ""}
                           onChange={(e) => set("name", e.target.value)}
@@ -897,29 +913,71 @@ export default function Home() {
                     </>
                   )}
                   <div className="formgroup">
-                    <label>Phone number</label>
+                    <label htmlFor="auth-phone">Phone number</label>
                     <input
+                      id="auth-phone"
                       required
                       placeholder="03XXXXXXXXX"
+                      type="tel"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      pattern="(?:03[0-9]{9}|\\+?923[0-9]{9})"
+                      title="Use 03XXXXXXXXX, +923XXXXXXXXX, or 923XXXXXXXXX."
                       value={form.phone || ""}
                       onChange={(e) => set("phone", e.target.value)}
                     />
                   </div>
-                  <div className="formgroup">
-                    <label>Password</label>
+                  {(modal === "login" || modal === "register") && (
+                    <div className="formgroup">
+                    <label htmlFor="auth-password">Password</label>
                     <input
+                      id="auth-password"
                       type="password"
-                      minLength={8}
+                      minLength={modal === "register" ? 12 : 1}
+                      autoComplete={
+                        modal === "register" ? "new-password" : "current-password"
+                      }
                       required
                       value={form.password || ""}
                       onChange={(e) => set("password", e.target.value)}
                     />
-                  </div>
+                    </div>
+                  )}
+                  {modal === "reset" && (
+                    <>
+                      <div className="formgroup">
+                        <label htmlFor="reset-token">8-digit SMS recovery code</label>
+                        <input
+                          id="reset-token"
+                          required
+                          inputMode="numeric"
+                          pattern="[0-9]{8}"
+                          maxLength={8}
+                          autoComplete="one-time-code"
+                          value={form.reset_token || ""}
+                          onChange={(e) => set("reset_token", e.target.value)}
+                        />
+                      </div>
+                      <div className="formgroup">
+                        <label htmlFor="reset-password">New password (at least 12 characters)</label>
+                        <input
+                          id="reset-password"
+                          required
+                          minLength={12}
+                          type="password"
+                          autoComplete="new-password"
+                          value={form.new_password || ""}
+                          onChange={(e) => set("new_password", e.target.value)}
+                        />
+                      </div>
+                    </>
+                  )}
                   {modal === "register" && (
                     <>
                       <div className="formgroup">
-                        <label>City</label>
+                        <label htmlFor="auth-city">City</label>
                         <select
+                          id="auth-city"
                           required
                           value={form.city || ""}
                           onChange={(e) => set("city", e.target.value)}
@@ -930,12 +988,23 @@ export default function Home() {
                         </select>
                       </div>
                       <div className="formgroup">
-                        <label>CNIC (optional)</label>
+                        <label htmlFor="auth-cnic">CNIC (optional, format only)</label>
                         <input
-                          placeholder="Do not enter real CNIC during evaluation"
-                          value={form.cnic || ""}
-                          onChange={(e) => set("cnic", e.target.value)}
+                        id="auth-cnic"
+                        placeholder="XXXXX-XXXXXXX-X"
+                        inputMode="numeric"
+                        maxLength={15}
+                        value={form.cnic || ""}
+                        onChange={(e) => {
+                          try {
+                            set("cnic", formatCnic(e.target.value));
+                            setError("");
+                          } catch (validationError) {
+                            setError((validationError as Error).message);
+                          }
+                        }}
                         />
+                        <small>Only the format is checked. It is not verified or stored.</small>
                       </div>
                       {form.role === "worker" && (
                         <>
@@ -991,6 +1060,33 @@ export default function Home() {
                     </>
                   )}
                 </div>
+              )}
+              {modal === "forgot" && (
+                <p className="muted">
+                  Enter your registered phone number. If recovery SMS is not
+                  configured, the app will tell you instead of pretending it
+                  sent a code.
+                </p>
+              )}
+              {modal === "login" && (
+                <p className="muted" style={{ marginTop: 12 }}>
+                  <button
+                    type="button"
+                    style={{
+                      border: 0,
+                      padding: 0,
+                      background: "none",
+                      color: "var(--copper)",
+                      fontWeight: 800,
+                    }}
+                    onClick={() => {
+                      setError("");
+                      setModal("forgot");
+                    }}
+                  >
+                    Forgot password?
+                  </button>
+                </p>
               )}
               {modal === "request" && (
                 <>
@@ -1048,6 +1144,8 @@ export default function Home() {
                     <label>Phone</label>
                     <input
                       required
+                      pattern="(?:03[0-9]{9}|\\+?923[0-9]{9})"
+                      title="Use 03XXXXXXXXX, +923XXXXXXXXX, or 923XXXXXXXXX."
                       value={form.phone || ""}
                       onChange={(e) => set("phone", e.target.value)}
                     />
@@ -1131,6 +1229,10 @@ export default function Home() {
                     ? "Log in"
                     : modal === "register"
                       ? "Create account"
+                      : modal === "forgot"
+                        ? "Send recovery code"
+                        : modal === "reset"
+                          ? "Reset password"
                       : modal === "request"
                         ? "Send job request"
                         : modal === "notify"
@@ -1138,11 +1240,6 @@ export default function Home() {
                           : "Submit review"}{" "}
                 <ArrowRight size={16} />
               </button>
-              {modal === "login" && (
-                <p className="muted" style={{ marginTop: 12 }}>
-                  Example worker login: 03000000001 / Demo12345!
-                </p>
-              )}
             </form>
           </div>
         </div>
