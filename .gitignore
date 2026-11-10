@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+__pycache__/
+.pytest_cache/
+.venv/
+*.db
+*.sqlite3
+uploads/
+*.tsbuildinfo
+coverage/
+*.log
+.DS_Store
