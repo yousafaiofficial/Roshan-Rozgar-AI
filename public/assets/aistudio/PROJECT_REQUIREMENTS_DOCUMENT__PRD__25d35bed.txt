@@ -1,0 +1,814 @@
+PROJECT REQUIREMENTS DOCUMENT (PRD) ROSHAN ROZGAR (روشن روزگار) A
+Hyper-Local AI-Powered Marketplace for Skilled Trade Workers
+
+Project Category: Full-Stack Web Development & Applied AI Event: CUI
+Tech Fest – AI Web Forge Hackathon Institution: COMSATS University
+Islamabad Development Stack: React, Node.js, Express.js, Supabase,
+PostgreSQL, OpenAI API Team Size: 3 Members Target Market: Pakistan
+Initial Geographic Coverage: Islamabad and Rawalpindi Document Version:
+1.0 Project Status: In Development
+
+============================================================ 1.
+EXECUTIVE SUMMARY
+============================================================
+
+Roshan Rozgar is an AI-powered, hyper-local web marketplace designed to
+connect households with nearby skilled trade workers, including
+electricians, plumbers, AC technicians, carpenters, mechanics and other
+service professionals.
+
+A significant proportion of Pakistan’s workforce operates in the
+informal economy. Many skilled workers have extensive practical
+experience but lack access to conventional digital employment platforms
+because these platforms depend on written profiles, CVs, complicated
+registration procedures and English-language interfaces.
+
+At the same time, households face difficulties finding reliable,
+available and reasonably priced service professionals within their
+neighbourhoods.
+
+Roshan Rozgar addresses these challenges through a mobile-first web
+application that uses artificial intelligence, voice interaction and
+location-based discovery.
+
+Workers can create profiles through spoken Urdu or Roman Urdu instead of
+conventional registration forms. Customers can search for nearby
+professionals, communicate through voice messages, negotiate prices,
+confirm bookings and submit reviews.
+
+The platform aims to make digital employment opportunities more
+accessible while improving transparency, convenience and trust in local
+service transactions.
+
+============================================================ 2. PROBLEM
+STATEMENT ============================================================
+
+Pakistan’s informal workforce includes millions of skilled individuals
+who provide essential services to households and businesses.
+
+Traditional employment platforms often fail to accommodate these workers
+because they require: - Reading and writing proficiency. -
+English-language communication. - Conventional registration forms. - CVs
+and formal employment histories. - Technical knowledge of digital
+applications.
+
+Consequently, skilled tradespeople frequently depend on personal
+contacts, local gathering points (addas), contractors and word-of-mouth
+recommendations.
+
+Customers experience a different but related problem. They often lack
+reliable information about: - Which workers operate nearby. - Which
+workers are currently available. - Whether a worker has relevant
+experience. - How much a service might cost. - Whether previous
+customers were satisfied.
+
+There is no simple, unified platform addressing both sides of this
+problem through an accessible digital experience.
+
+2.1 PROPOSED SOLUTION
+
+Roshan Rozgar will provide a centralized marketplace where: 1. Workers
+register through voice-based AI onboarding. 2. Customers discover nearby
+workers using service and location filters. 3. Both parties communicate
+through voice messages and structured quotations. 4. Customers confirm
+bookings through the platform. 5. Completed jobs generate customer
+reviews and worker reputation information.
+
+============================================================ 3. PROJECT
+OBJECTIVES ============================================================
+
+The primary objectives are: 1. Develop an accessible digital marketplace
+for informal skilled workers. 2. Eliminate the need for conventional
+written registration through voice-based onboarding. 3. Enable customers
+to find nearby and available service professionals. 4. Support
+communication in Urdu and Roman Urdu. 5. Simplify job negotiation
+through AI-assisted communication. 6. Maintain accurate worker
+availability during confirmed bookings. 7. Establish a reputation system
+using completed jobs and customer reviews. 8. Demonstrate practical AI
+integration that addresses genuine accessibility barriers.
+
+============================================================ 4. PROJECT
+SCOPE ============================================================
+
+4.1 IN-SCOPE FEATURES
+
+The initial release will include: - Customer and worker role
+selection. - Worker registration through voice interaction. - AI-based
+speech transcription. - AI-powered extraction of worker profile
+information. - Worker profile management. - Service category
+selection. - Location-based worker discovery. - Worker availability
+filtering. - Worker profile and experience information. - Voice-based
+customer-worker communication. - AI-assisted job description
+extraction. - Price quotation and counteroffer functionality. - Booking
+confirmation and cancellation. - Worker availability management. - Job
+completion management. - Customer ratings and reviews. - AI-assisted
+review categorization and summarization. - Responsive mobile-first web
+interface. - Seeded demonstration data.
+
+4.2 OUT-OF-SCOPE FEATURES
+
+The following features are excluded from the initial MVP: - Online
+payment processing. - Government database identity verification. -
+Native Android and iOS applications. - Advanced insurance and
+dispute-resolution systems. - Automated worker background checks. -
+Complex contractor management. - Full-scale commercial deployment. -
+Real-time GPS tracking throughout a job. - Automated SMS infrastructure.
+
+These features may be considered for future releases.
+
+============================================================ 5. TARGET
+USERS ============================================================
+
+5.1 PRIMARY USER: SKILLED TRADE WORKER
+
+Examples: - Electricians. - Plumbers. - AC technicians. - Carpenters. -
+Mechanics. - Painters. - Appliance repair technicians.
+
+User characteristics: - May have limited reading or writing
+proficiency. - May prefer Urdu or Roman Urdu. - May have extensive
+practical experience without formal qualifications. - May primarily use
+a smartphone. - May be unfamiliar with conventional employment
+platforms.
+
+User goals: - Create a professional digital profile. - Receive local job
+requests. - Communicate with customers easily. - Negotiate service
+prices. - Manage job availability. - Build a reputation through customer
+feedback.
+
+5.2 SECONDARY USER: CUSTOMER
+
+Examples: - Homeowners. - Tenants. - Families. - Small businesses. -
+Property managers.
+
+User goals: - Find suitable service professionals nearby. - Identify
+currently available workers. - Compare worker experience and reviews. -
+Understand service prices before confirming. - Communicate without
+complicated procedures. - Hire reliable professionals.
+
+============================================================ 6. USER
+ROLES AND PERMISSIONS
+============================================================
+
+Functionality Worker Customer Create worker profile Yes No Search
+workers No Yes View worker profiles Own profile Yes Update availability
+Yes No Receive job requests Yes No Send job requests No Yes Exchange
+messages Yes Yes Negotiate price Yes Yes Confirm booking Accept Accept
+quotation Complete job Yes No Submit review No Yes View reviews Yes Yes
+
+Only authorized participants should be able to modify their respective
+bookings and profiles.
+
+============================================================ 7.
+FUNCTIONAL REQUIREMENTS
+============================================================
+
+Functional requirements describe what the system must do.
+
+FR-01: USER ROLE SELECTION The system shall provide two primary user
+roles: - Worker. - Customer.
+
+Users shall be directed to the appropriate application interface based
+on their selected role.
+
+FR-02: VOICE-BASED WORKER ONBOARDING The system shall allow workers to
+register without completing a conventional text-based registration form.
+
+The onboarding process shall: 1. Display a prominent voice-recording
+control. 2. Capture spoken information. 3. Submit audio to the backend.
+4. Convert speech into text. 5. Extract relevant worker information
+using an AI language model. 6. Generate a structured profile. 7. Display
+extracted information for confirmation. 8. Save the approved profile to
+the database.
+
+Expected profile attributes: - Full name. - Trade category. - Years of
+experience. - Operating location. - Professional skills. - Short
+description. - Starting price. - Availability status.
+
+FR-03: WORKER PROFILE MANAGEMENT The system shall allow workers to: -
+View their profiles. - Update profile information. - Modify their
+professional description. - Update starting prices. - Change
+availability status. - Review customer feedback. - View completed jobs.
+
+FR-04: CUSTOMER DISCOVERY The system shall allow customers to search for
+workers using: - Service category. - Location. - Availability. -
+Distance. - Experience. - Customer rating.
+
+Search results shall display relevant worker information.
+
+The system shall prioritize suitable workers based on service
+compatibility, availability, distance and reputation.
+
+FR-05: WORKER PROFILE VIEWING Customers shall be able to view: - Worker
+name. - Profession. - Experience. - Service location. - Starting
+price. - Availability. - Customer rating. - Completed jobs. - Previous
+customer reviews.
+
+FR-06: VOICE-BASED COMMUNICATION The system shall provide a
+communication interface supporting voice messages and text transcripts.
+
+Users shall be able to: - Record voice messages. - Send messages. -
+Listen to received audio. - View generated transcripts. - Communicate
+job requirements. - Discuss service prices.
+
+FR-07: AI-ASSISTED JOB UNDERSTANDING The AI system shall analyze
+customer voice messages and extract: - Requested service. - Problem
+description. - Urgency. - Relevant location information, when provided.
+
+The extracted information shall be presented for user confirmation.
+
+FR-08: PRICE NEGOTIATION The system shall support structured price
+quotations.
+
+Workers shall be able to: - Submit a proposed price. - Review customer
+responses. - Accept a counteroffer. - Submit another quotation.
+
+Customers shall be able to: - View proposed prices. - Accept a
+quotation. - Reject a quotation. - Submit a counteroffer.
+
+The final agreed price shall be stored with the booking.
+
+FR-09: BOOKING MANAGEMENT The system shall support the following booking
+statuses:
+
+Pending: Request awaiting worker response. Confirmed: Both parties have
+agreed. In Progress: Work has started. Completed: Work has finished.
+Cancelled: Booking has been cancelled.
+
+The system shall update worker availability when a booking is confirmed.
+
+A worker shall not be assigned overlapping confirmed jobs.
+
+FR-10: WORKER AVAILABILITY The system shall: - Display available
+workers. - Display busy workers. - Prevent new confirmed bookings for
+engaged workers. - Update availability after job completion. - Update
+availability following valid cancellation.
+
+FR-11: CUSTOMER REVIEWS Customers shall be able to submit feedback after
+completed jobs.
+
+The review shall include: - Numerical rating from 1 to 5. - Written or
+voice feedback. - Optional feedback categories.
+
+Only customers associated with completed bookings shall be permitted to
+review the corresponding worker.
+
+FR-12: AI REVIEW ANALYSIS The AI system shall: 1. Transcribe voice
+reviews when applicable. 2. Identify relevant feedback. 3. Categorize
+feedback into service quality, punctuality and communication. 4.
+Generate concise summaries from existing customer reviews.
+
+The system shall not generate unsupported review claims.
+
+FR-13: RESPONSIVE INTERFACE The application shall support: - Desktop
+browsers. - Tablet screens. - Smartphone screens.
+
+Worker interfaces shall prioritize large buttons, simple navigation,
+readable text and voice-based interaction.
+
+============================================================ 8.
+NON-FUNCTIONAL REQUIREMENTS
+============================================================
+
+NFR-01: USABILITY The system shall provide a simple interface suitable
+for users with limited digital literacy.
+
+NFR-02: ACCESSIBILITY The system shall prioritize: - Large interactive
+controls. - Clear visual feedback. - Simple language. - Urdu-friendly
+text rendering. - Voice-based interaction. - Minimal mandatory typing.
+
+NFR-03: PERFORMANCE The application should: - Load primary pages within
+approximately 3 seconds under a reasonable test network. - Return
+ordinary worker search results within approximately 2 seconds under
+normal demo conditions. - Provide clear loading indicators during AI
+processing. - Avoid blocking the entire application during asynchronous
+operations.
+
+These are development targets, not measured performance guarantees.
+
+NFR-04: SECURITY The system shall: - Store API credentials in
+environment variables. - Never expose private API keys in frontend
+code. - Validate backend inputs. - Apply database access policies. -
+Restrict access to authorized booking participants. - Prevent
+unauthorized review submission. - Protect customer and worker
+information.
+
+NFR-05: RELIABILITY The system shall maintain consistency between
+booking statuses and worker availability.
+
+NFR-06: MAINTAINABILITY The application shall use modular frontend
+components, organized backend routes and clearly structured database
+operations.
+
+NFR-07: SCALABILITY The database and application architecture should
+support future expansion to additional cities and service categories.
+
+============================================================ 9.
+ARTIFICIAL INTELLIGENCE REQUIREMENTS
+============================================================
+
+AI is a central component of Roshan Rozgar rather than an optional
+decorative feature.
+
+AI-01: SPEECH RECOGNITION Purpose: Convert spoken Urdu, Roman Urdu and
+supported languages into text. Input: Audio recordings from workers and
+customers. Output: Transcribed text. Technology: OpenAI speech-to-text
+API.
+
+AI-02: WORKER INFORMATION EXTRACTION Purpose: Convert natural speech
+into structured worker profile information.
+
+Example input: “Mera naam Ali hai. Main electrician hoon aur mujhe 8
+saal ka experience hai.”
+
+Expected output: { “name”: “Ali”, “trade”: “Electrician”,
+“experience_years”: 8 }
+
+The extracted information shall be validated before database insertion.
+
+AI-03: JOB REQUEST UNDERSTANDING Purpose: Understand customer
+requirements from natural speech.
+
+Expected output: { “service”: “AC Repair”, “urgency”: “Today”,
+“problem”: “AC not cooling”, “location”: “Bhara Kahu” }
+
+AI-04: AI-ASSISTED NEGOTIATION Purpose: Extract proposed prices and
+important job information from voice messages.
+
+Example input: “Main visit ke 500 rupay loon ga.”
+
+Output: { “proposed_price”: 500, “currency”: “PKR” }
+
+The extracted quotation must be confirmed by the worker before being
+sent.
+
+AI-05: REVIEW INTELLIGENCE Purpose: Transform voice feedback into
+structured and understandable customer feedback.
+
+Expected categories: - Work quality. - Punctuality. - Communication. -
+Professionalism.
+
+AI-generated summaries shall be based only on available reviews.
+
+9.1 AI VALIDATION
+
+The system shall account for: - Incorrect speech transcription. -
+Ambiguous service descriptions. - Incorrectly extracted prices. -
+Unsupported language recognition. - Missing profile information.
+
+Users shall be able to review and correct extracted information before
+it is finalized.
+
+============================================================ 10. SYSTEM
+ARCHITECTURE
+============================================================
+
+The application shall use a client-server architecture.
+
+10.1 FRONTEND Technology: React + Vite + Tailwind CSS
+
+Responsibilities: - User interface rendering. - Role-based navigation. -
+Audio recording. - Worker discovery. - Booking interfaces. - Profile
+management. - Review submission.
+
+10.2 BACKEND Technology: Node.js + Express.js
+
+Responsibilities: - AI API communication. - Audio processing. -
+Structured data extraction. - Input validation. - Secure booking
+operations. - Business logic.
+
+10.3 DATABASE Technology: Supabase PostgreSQL
+
+Responsibilities: - Worker profiles. - Customer information. - Booking
+records. - Messages. - Reviews. - Availability records.
+
+10.4 AI SERVICES Technology: OpenAI API
+
+Responsibilities: - Speech-to-text. - Language understanding. -
+Structured information extraction. - Review analysis.
+
+10.5 LOCATION SERVICES Technology: Leaflet + OpenStreetMap
+
+Responsibilities: - Display worker locations. - Visualize nearby service
+professionals. - Support geographical discovery.
+
+The MVP may use seeded coordinates and manually selected areas instead
+of continuous GPS tracking.
+
+============================================================ 11.
+DATABASE REQUIREMENTS
+============================================================
+
+The database shall contain the following principal entities.
+
+11.1 WORKERS
+
+Field Data Type id UUID name TEXT trade TEXT experience_years INTEGER
+area TEXT latitude DOUBLE PRECISION longitude DOUBLE PRECISION
+starting_price INTEGER bio TEXT is_available BOOLEAN rating NUMERIC
+completed_jobs INTEGER created_at TIMESTAMPTZ
+
+11.2 CUSTOMERS
+
+Field Data Type id UUID name TEXT phone TEXT created_at TIMESTAMPTZ
+
+11.3 BOOKINGS
+
+Field Data Type id UUID worker_id UUID customer_id UUID service TEXT
+description TEXT proposed_price INTEGER agreed_price INTEGER status TEXT
+created_at TIMESTAMPTZ
+
+11.4 MESSAGES
+
+Field Data Type id UUID booking_id UUID sender_id UUID sender_role TEXT
+transcript TEXT audio_url TEXT created_at TIMESTAMPTZ
+
+11.5 REVIEWS
+
+Field Data Type id UUID booking_id UUID worker_id UUID customer_id UUID
+rating INTEGER review_text TEXT categories JSONB created_at TIMESTAMPTZ
+
+The implementation may add supporting tables for worker skills,
+authentication profiles and booking availability if required.
+
+============================================================ 12. MAIN
+APPLICATION MODULES
+============================================================
+
+MODULE 1: LANDING PAGE - Project introduction. - Service categories. -
+Customer entry point. - Worker registration entry point.
+
+MODULE 2: WORKER ONBOARDING - Voice recording. - AI transcription. -
+Profile extraction. - Profile confirmation.
+
+MODULE 3: WORKER DASHBOARD - Profile information. - Availability
+toggle. - Incoming requests. - Active bookings. - Completed jobs.
+
+MODULE 4: CUSTOMER DASHBOARD - Service search. - Location selection. -
+Available worker listing. - Search filters.
+
+MODULE 5: WORKER PROFILE - Professional information. - Experience. -
+Starting price. - Rating. - Customer reviews.
+
+MODULE 6: COMMUNICATION - Voice recording. - Voice playback. - Message
+transcripts. - Price quotations.
+
+MODULE 7: BOOKING MANAGEMENT - Request creation. - Worker acceptance. -
+Price agreement. - Booking confirmation. - Completion and cancellation.
+
+MODULE 8: TRUST AND REVIEWS - Customer ratings. - Voice and text
+reviews. - Review categorization. - Worker reputation summaries.
+
+============================================================ 13. MAIN
+USER WORKFLOWS
+============================================================
+
+13.1 WORKER WORKFLOW
+
+1.  Worker opens Roshan Rozgar.
+2.  Selects “Become a Worker.”
+3.  Records a voice introduction.
+4.  AI transcribes the recording.
+5.  AI extracts professional information.
+6.  Worker reviews the generated profile.
+7.  Worker confirms the profile.
+8.  Profile is saved.
+9.  Worker sets availability to available.
+10. Worker receives customer requests.
+11. Worker communicates with customers.
+12. Worker negotiates the price.
+13. Worker accepts a booking.
+14. Worker completes the job.
+15. Worker becomes available for future requests.
+
+13.2 CUSTOMER WORKFLOW
+
+1.  Customer opens Roshan Rozgar.
+2.  Selects “Find a Worker.”
+3.  Chooses a service category.
+4.  Selects their location.
+5.  Views nearby available workers.
+6.  Compares profiles and reviews.
+7.  Selects a suitable worker.
+8.  Sends a job request through voice or text.
+9.  Communicates with the worker.
+10. Reviews the quotation.
+11. Accepts the agreed price.
+12. Booking is confirmed.
+13. Worker completes the job.
+14. Customer submits a review.
+
+============================================================ 14. USER
+INTERFACE REQUIREMENTS
+============================================================
+
+The design shall follow a modern, accessible and mobile-first visual
+language.
+
+14.1 DESIGN SYSTEM
+
+Primary Color: Deep Forest Green (#123D2C) Secondary Color: Green
+(#26734A) Background: Off-white (#F8FAF7) Accent: Warm Yellow (#F2B84B)
+Supporting Color: Sage Green (#E8F1E7)
+
+14.2 INTERFACE PRINCIPLES
+
+-   Minimal visual clutter.
+-   Large voice-recording buttons.
+-   Clearly identifiable actions.
+-   Consistent navigation.
+-   Responsive cards.
+-   Readable Urdu and English typography.
+-   Accessible contrast.
+-   Clear booking status indicators.
+
+14.3 MAIN PAGES
+
+1.  Landing Page.
+2.  Role Selection.
+3.  Worker Voice Onboarding.
+4.  Worker Dashboard.
+5.  Customer Dashboard.
+6.  Worker Profile.
+7.  Communication and Negotiation.
+8.  Booking and Review.
+
+============================================================ 15. API
+REQUIREMENTS
+============================================================
+
+The backend shall expose the following API endpoints.
+
+Method Endpoint Purpose POST /api/ai/transcribe Convert audio into text
+POST /api/ai/extract-profile Extract worker profile POST
+/api/ai/extract-job Understand job requests POST
+/api/ai/extract-quotation Extract proposed price POST
+/api/ai/analyze-review Analyze customer feedback GET /api/workers
+Retrieve workers GET /api/workers/:id Retrieve worker profile PATCH
+/api/workers/:id Update worker profile POST /api/bookings Create booking
+request POST /api/bookings/:id/confirm Confirm quotation and booking
+PATCH /api/bookings/:id/status Update booking status POST /api/reviews
+Submit customer review GET /api/reviews/:workerId Retrieve worker
+reviews
+
+All endpoints shall validate inputs and return appropriate HTTP status
+codes.
+
+============================================================ 16.
+BUSINESS RULES
+============================================================
+
+The system shall enforce the following rules:
+
+1.  Every worker must have a valid trade category.
+2.  Worker experience cannot be negative.
+3.  A customer must select a worker before creating a booking.
+4.  A booking must initially have a pending status.
+5.  A worker must accept a request before it becomes confirmed.
+6.  A confirmed booking must contain an agreed price.
+7.  A busy worker cannot accept another overlapping confirmed booking.
+8.  A completed booking must not be reopened without an authorized
+    administrative process.
+9.  Customers may review only completed bookings.
+10. A booking may receive only one review.
+11. A worker’s availability must be restored after valid completion or
+    cancellation, provided no other active engagement exists.
+12. AI-generated information must be reviewed or confirmed where it
+    affects a profile, quotation or booking.
+
+============================================================ 17.
+SECURITY AND DATA PRIVACY
+============================================================
+
+The system shall follow basic secure application development practices.
+
+-   API keys shall be stored in server-side environment variables.
+-   Frontend access shall use appropriately restricted Supabase
+    publishable credentials.
+-   Supabase Row Level Security shall be configured.
+-   Database operations shall be protected by authorization checks.
+-   Uploaded audio shall have controlled access.
+-   User input shall be validated and sanitized.
+-   Sensitive information shall not be unnecessarily collected.
+-   AI services shall receive only the information required for their
+    task.
+-   Demo accounts shall not contain real customer secrets.
+
+Government identity verification is not part of this project.
+
+============================================================ 18. TESTING
+REQUIREMENTS
+============================================================
+
+Testing shall cover the five required hackathon outcomes.
+
+18.1 FUNCTIONAL TESTING
+
+Test ID Test Case Expected Result TC-01 Worker records Urdu introduction
+Audio is captured TC-02 AI processes worker recording Structured profile
+is generated TC-03 Worker confirms profile Profile is saved TC-04
+Customer selects electrician Relevant workers appear TC-05 Customer
+filters available workers Busy workers are excluded TC-06 Customer sends
+voice request Message is transcribed TC-07 Worker submits quotation
+Price is displayed TC-08 Customer accepts quotation Booking is confirmed
+TC-09 Second customer tries booking busy worker Confirmation is rejected
+TC-10 Worker completes job Booking status changes TC-11 Customer submits
+review Review is saved TC-12 AI analyzes review Feedback categories are
+generated
+
+18.2 INTEGRATION TESTING
+
+Verify that: - React communicates successfully with the backend. -
+Backend communicates with OpenAI. - Backend and frontend communicate
+with Supabase through authorized operations. - Booking updates are
+reflected across user interfaces. - AI outputs are correctly stored in
+the database.
+
+18.3 USABILITY TESTING
+
+Test the worker workflow using a smartphone-sized screen.
+
+Evaluate: - Whether a worker can understand the recording interface. -
+Whether the recording controls are easy to use. - Whether extracted
+information is understandable. - Whether errors are communicated
+clearly. - Whether a worker can manage availability without extensive
+reading.
+
+18.4 RELIABILITY TESTING
+
+Test: - Failed audio uploads. - AI API timeouts. - Invalid extracted
+information. - Database connection failures. - Duplicate booking
+attempts. - Unauthorized booking modifications. - Invalid review
+submissions.
+
+============================================================ 19.
+ACCEPTANCE CRITERIA
+============================================================
+
+The MVP shall be considered ready for demonstration when all the
+following conditions are satisfied.
+
+Requirement Acceptance Condition Onboarding Worker can generate and save
+a profile through voice interaction Discovery Customer can find relevant
+nearby available workers Communication Both parties can exchange voice
+messages and agree on a quotation Booking Confirmed booking updates
+worker availability Trust Customer can submit a review after completion
+AI AI performs meaningful transcription and information extraction
+Accessibility Worker interface works on a smartphone-sized screen
+Reliability Busy workers cannot receive overlapping confirmed bookings
+
+All five hackathon outcomes must be demonstrated as one connected flow.
+
+============================================================ 20. SEEDED
+AND SIMULATED DATA
+============================================================
+
+Because the hackathon does not provide real users, the MVP will use
+demonstration data.
+
+Initial demonstration dataset: - 20 skilled worker profiles. - 3
+customer demonstration accounts. - 6 service categories. - 10 historical
+completed bookings. - 10 historical customer reviews. - 2 pending
+booking requests.
+
+Initial geographical coverage: - Bhara Kahu. - G-9. - F-10. - I-8. -
+I-10. - Blue Area. - Satellite Town. - Saddar. - Bahria Town.
+
+All seeded profiles, historical bookings and reviews shall be disclosed
+as demonstration data.
+
+Live voice processing and actual database booking operations shall be
+distinguished from mocked functionality.
+
+============================================================ 21.
+TECHNOLOGY STACK
+============================================================
+
+Component Technology Purpose Frontend React User interface Build Tool
+Vite Development and build Styling Tailwind CSS Responsive design
+Routing React Router Page navigation Backend Node.js Server runtime API
+Framework Express.js Backend endpoints Database Supabase PostgreSQL
+Persistent storage Authentication Supabase Auth User authentication AI
+OpenAI API Speech and language processing Mapping Leaflet Geographic
+visualization Map Data OpenStreetMap Map tiles Version Control Git and
+GitHub Collaboration Deployment Vercel / suitable hosting Web
+application deployment
+
+============================================================ 22. TEAM
+RESPONSIBILITIES
+============================================================
+
+The project will be developed by a three-member team.
+
+MEMBER 1: FRONTEND DEVELOPER Responsibilities: - React application
+setup. - Landing page. - Worker dashboard. - Customer dashboard. -
+Worker profiles. - Communication interface. - Booking interface. -
+Responsive UI. - Frontend integration.
+
+MEMBER 2: BACKEND AND DATABASE DEVELOPER Responsibilities: - Supabase
+project setup. - PostgreSQL schema. - Seed data preparation. - Worker
+discovery queries. - Booking management. - Availability management. -
+Database security. - Backend integration testing.
+
+MEMBER 3: AI DEVELOPER Responsibilities: - Express backend setup. -
+OpenAI API integration. - Speech transcription. - Urdu/Roman Urdu
+understanding. - Worker profile extraction. - Job request extraction. -
+Price extraction. - Review intelligence. - AI integration testing.
+
+All members shall participate in system integration and final
+demonstration preparation.
+
+============================================================ 23.
+DEVELOPMENT TIMELINE
+============================================================
+
+Because the project is being developed during a same-day hackathon, the
+following timeline is organized around the available development window.
+
+Development Phase Time Allocation Project initialization and planning
+10% Frontend foundation 15% Database and worker discovery 20% AI
+integration 20% Communication and booking 20% Testing and presentation
+15%
+
+Development shall follow an iterative approach. Core functionality must
+be integrated early rather than waiting for every module to be completed
+independently.
+
+============================================================ 24. RISKS
+AND MITIGATION
+============================================================
+
+Risk Mitigation Incorrect Urdu transcription Allow transcript correction
+Incorrect AI profile extraction Require worker confirmation OpenAI API
+failure Display a clear error and provide text fallback Internet
+connectivity problems Prepare seeded data and local demo Duplicate
+booking Use transactional database operations Inconsistent availability
+Centralize booking status changes Limited development time Prioritize
+all five required outcomes Poor mobile usability Test smartphone layouts
+early API key exposure Keep secrets on the backend Missing real users
+Clearly disclose seeded demonstration records
+
+============================================================ 25. FUTURE
+ENHANCEMENTS
+============================================================
+
+Potential future versions may include: - Full Urdu voice-guided
+application navigation. - Additional Pakistani languages. - Real-time
+GPS-based worker discovery. - Worker identity verification. - Secure
+online payments. - Advanced reputation scoring. - Service price
+recommendations. - Worker earnings dashboards. - Job scheduling and
+recurring bookings. - Dispute resolution. - WhatsApp integration. -
+Dedicated Android and iOS applications. - Expansion into additional
+Pakistani cities.
+
+============================================================ 26.
+HACKATHON EVALUATION ALIGNMENT
+============================================================
+
+The project directly addresses the evaluation criteria.
+
+Criterion Weight Roshan Rozgar Strategy Technical Execution 30%
+Connected frontend, backend, database and booking flow Problem
+Understanding and Impact 20% Accessibility for informal skilled workers
+Innovation and AI 20% Voice onboarding, language understanding and
+review intelligence Usability and Accessibility 15% Urdu-friendly,
+voice-first and mobile-first interface Presentation 15% Continuous
+demonstration across both user roles
+
+The implementation shall prioritize functional completeness, explainable
+AI integration and consistency of the booking system.
+
+============================================================ 27. PROJECT
+DELIVERABLES
+============================================================
+
+The final submission shall contain: 1. Public GitHub repository. 2.
+Complete source code. 3. Working web application. 4. Database schema and
+seed scripts. 5. AI integration. 6. Environment configuration
+instructions. 7. README documentation. 8. Demo accounts. 9. Deployed
+application or locally running demonstration. 10. Live presentation
+demonstrating both worker and customer journeys.
+
+The README shall identify all third-party services, AI tools, coding
+assistants, seeded information, mocked components and known limitations.
+
+============================================================ 28.
+CONCLUSION ============================================================
+
+Roshan Rozgar aims to bridge the gap between Pakistan’s informal skilled
+workforce and households that require dependable local services.
+
+Rather than forcing workers to adapt to conventional digital employment
+systems, the platform uses voice interaction and artificial intelligence
+to make digital participation more accessible.
+
+For customers, it introduces a structured way to discover nearby
+workers, compare professional information, negotiate prices, confirm
+jobs and evaluate service quality.
+
+The project’s core value is the combination of accessibility, local
+discovery, reliable booking and reputation management in one connected
+system.
+
+ROSHAN ROZGAR — KAAM AASAAN, ROZGAR ROSHAN.
+
+END OF PROJECT REQUIREMENTS DOCUMENT

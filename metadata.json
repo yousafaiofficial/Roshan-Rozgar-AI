@@ -1,0 +1,6 @@
+{
+  "name": "Roshan Rozgar - AI Skilled Trade Marketplace",
+  "description": "Hyper-local AI-powered marketplace connecting Pakistani households with skilled trade workers using voice-based onboarding in Urdu/Roman Urdu, smart price negotiation, and verified booking availability in Islamabad and Rawalpindi.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
